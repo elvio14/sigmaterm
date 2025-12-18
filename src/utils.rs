@@ -65,3 +65,30 @@ pub fn get_set_from_hue(h: f32) -> ColorSet {
         alternate_3: hsl_to_egui_color32((h + 270.0) % 360.0,  0.6, 0.6),
     }
 }
+
+pub fn window_button(ui: &mut egui::Ui, text: &str, button_color: egui::Color32, hover_color: egui::Color32) -> bool {
+    let button_size = egui::vec2(32.0, 24.0);
+    let (rect, response) = ui.allocate_exact_size(button_size, egui::Sense::click());
+    
+    // Draw background on hover
+    if response.hovered() {
+        ui.painter().rect_filled(rect, 0.0, hover_color);
+    }
+    
+    // Draw icon
+    let text_color = if response.hovered() {
+        egui::Color32::WHITE
+    } else {
+        button_color
+    };
+    
+    ui.painter().text(
+        rect.center(),
+        egui::Align2::CENTER_CENTER,
+        text,
+        egui::FontId::proportional(16.0),
+        text_color,
+    );
+    
+    response.clicked()
+}

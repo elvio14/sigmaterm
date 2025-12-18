@@ -17,7 +17,7 @@ fn main() -> eframe::Result {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title("Sigmaterm")
-            .with_inner_size([800.0, 600.0])
+            .with_inner_size([1000.0, 600.0])
             .with_resizable(true)
             .with_decorations(false), // Disable native window decorations
         ..Default::default()
@@ -27,6 +27,7 @@ fn main() -> eframe::Result {
         "Sigmaterm",
         options,
         Box::new(|cc| {
+            egui_extras::install_image_loaders(&cc.egui_ctx);
             setup_fonts(&cc.egui_ctx);
             Ok(Box::new(Sigmaterm::new()))
         }),
@@ -35,40 +36,17 @@ fn main() -> eframe::Result {
 
 fn setup_fonts(ctx: &egui::Context){
     let mut fonts = egui::FontDefinitions::default();
-    // JetBrains
+    
+    // Load JetBrains Mono
     fonts.font_data.insert("jetbrains".to_owned(), 
         Arc::new(egui::FontData::from_static(include_bytes!("../assets/JetBrainsMono-2.304/fonts/ttf/JetBrainsMono-Regular.ttf")))
     );
 
-    fonts.font_data.insert(
-        "emoji".to_owned(),
-        Arc::new(egui::FontData::from_static(include_bytes!("../assets/Noto_Color_Emoji/NotoColorEmoji-Regular.ttf")))
-    );
-
-    // Set up font families with fallback
-    fonts
-        .families
-        .get_mut(&egui::FontFamily::Monospace)
-        .unwrap()
-        .insert(0, "jetbrains".to_owned());
+    // For Monospace: JetBrains first, then egui's default fallbacks (which include some emoji support)
+    fonts.families.get_mut(&egui::FontFamily::Monospace).unwrap().insert(0, "jetbrains".to_owned());
     
-    fonts
-        .families
-        .get_mut(&egui::FontFamily::Monospace)
-        .unwrap()
-        .push("emoji".to_owned());
-    
-    fonts
-        .families
-        .get_mut(&egui::FontFamily::Proportional)
-        .unwrap()
-        .insert(0, "jetbrains".to_owned());
-    
-    fonts
-        .families
-        .get_mut(&egui::FontFamily::Proportional)
-        .unwrap()
-        .push("emoji".to_owned());
+    // For Proportional: JetBrains first, then egui's default fallbacks
+    fonts.families.get_mut(&egui::FontFamily::Proportional).unwrap().insert(0, "jetbrains".to_owned());
 
     ctx.set_fonts(fonts);
 }

@@ -1,5 +1,6 @@
 use eframe::egui;
 use egui::Stroke;
+use crate::utils::window_button;
 
 pub struct WindowBar {
     bg_color: egui::Color32,
@@ -43,7 +44,7 @@ impl WindowBar {
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
                     // Left side: Add terminal button
-                    if self.window_button(ui, "❮+❯", self.hover_color) {
+                    if window_button(ui, "❮+❯", self.button_color, self.hover_color) {
                         add_terminal = true;
                     }
                     
@@ -53,17 +54,17 @@ impl WindowBar {
                         egui::Layout::right_to_left(egui::Align::Center),
                         |ui| {
                             // Right side: Window control buttons (added right to left)
-                            if self.window_button(ui, "✕", self.close_hover_color) {
+                            if window_button(ui, "×", self.button_color, self.close_hover_color) {
                                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
                             }
                             
                             let is_maximized = ui.input(|i| i.viewport().maximized.unwrap_or(false));
-                            let maximize_icon = if is_maximized { "🗗" } else { "🗖" };
-                            if self.window_button(ui, maximize_icon, self.hover_color) {
+                            let maximize_icon = if is_maximized { "❐" } else { "□" };
+                            if window_button(ui, maximize_icon, self.button_color, self.hover_color) {
                                 ctx.send_viewport_cmd(egui::ViewportCommand::Maximized(!is_maximized));
                             }
                             
-                            if self.window_button(ui, "🗕", self.hover_color) {
+                            if window_button(ui, "_", self.button_color, self.hover_color) {
                                 ctx.send_viewport_cmd(egui::ViewportCommand::Minimized(true));
                             }
 
@@ -96,33 +97,6 @@ impl WindowBar {
             });
         
         add_terminal
-    }
-
-    fn window_button(&self, ui: &mut egui::Ui, text: &str, hover_color: egui::Color32) -> bool {
-        let button_size = egui::vec2(32.0, 24.0);
-        let (rect, response) = ui.allocate_exact_size(button_size, egui::Sense::click());
-        
-        // Draw background on hover
-        if response.hovered() {
-            ui.painter().rect_filled(rect, 0.0, hover_color);
-        }
-        
-        // Draw icon
-        let text_color = if response.hovered() {
-            egui::Color32::WHITE
-        } else {
-            self.button_color
-        };
-        
-        ui.painter().text(
-            rect.center(),
-            egui::Align2::CENTER_CENTER,
-            text,
-            egui::FontId::proportional(16.0),
-            text_color,
-        );
-        
-        response.clicked()
     }
 
     fn dark_mode_toggle_button(&self, ui: &mut egui::Ui, dark_mode: bool) -> bool {
