@@ -85,6 +85,10 @@ impl Terminal {
         self.height = height;
     }
 
+    pub fn set_maximized(&mut self, is_maximized:bool){
+        self.is_maximized = is_maximized;
+        self.header.set_maximized(is_maximized);
+    }
     pub fn get_title(&self) -> String {
         self.header.get_title().to_string()
     }

@@ -165,6 +165,7 @@ impl TerminalManager {
                 ui.style_mut().spacing.item_spacing.x = 0.0;
                 for &idx in &self.top_row_terminals.clone() {
                     if let Some(terminal) = self.terminals.get_mut(idx) {
+                        terminal.set_maximized(false);
                         let terminal_response = terminal.render(ui);
                         if terminal_response == TerminalResponse::WasClicked {
                             self.set_active_terminal(idx);
@@ -183,6 +184,7 @@ impl TerminalManager {
                 ui.horizontal(|ui| {
                     for &idx in &self.bottom_row_terminals.clone() {
                         if let Some(terminal) = self.terminals.get_mut(idx) {
+                            terminal.set_maximized(false);
                             let terminal_response = terminal.render(ui);
                             if terminal_response == TerminalResponse::WasClicked {
                                 self.set_active_terminal(idx);
@@ -214,6 +216,7 @@ impl TerminalManager {
                     // Set terminal to full width and available height
                     terminal.set_width(ui.available_width());
                     terminal.set_height(terminal_height);
+                    terminal.set_maximized(true);
                     
                     let terminal_response = terminal.render(ui);
                     if terminal_response == TerminalResponse::CloseMe {
