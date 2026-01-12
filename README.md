@@ -6,7 +6,7 @@
 
 <img width="900" height="auto" alt="image" src="https://github.com/user-attachments/assets/2f797590-84e0-478f-8d6c-0e632cd3804c" />
 
-https://github.com/elvio14/sigmaterm/blob/main/sigmaterm_demo.mp4
+https://youtu.be/1Xw0pK46ME8?si=tDRTfYIakglX5cLU
 
 Linux terminal emulator, currently supports basic terminal operations.
 
